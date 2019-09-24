@@ -1,0 +1,61 @@
+<h1>{{title}}</h1>
+
+<button style="background-color:#6772E5;color:#FFF;padding:8px 12px;border:0;border-radius:4px;font-size:1em"
+    id="checkout-button-pro"
+    role="link">Checkout 300 pari with backend</button>
+
+<script>
+  (function () {
+    const stripe = Stripe('pk_test_534hDEH0XBvwrXwmoOnTNPLb00AY49MXhP');
+
+    const checkoutButton = document.getElementById('checkout-button-pro');
+    checkoutButton.addEventListener('click', () => {
+      fetch('/checkout/pro')
+          .then(response=>response.json())
+          .then(session => {
+        console.log(session);
+        stripe.redirectToCheckout({
+          sessionId: session.id
+        }).then((result) => {
+          console.log(result);
+        });
+      });
+    });
+  })();
+</script>
+
+<button
+    style="background-color:#6772E5;color:#FFF;padding:8px 12px;border:0;border-radius:4px;font-size:1em"
+    id="checkout-button-plan_Fq4seFDoQuLzOB"
+    role="link"
+>
+  Checkout 300 pari client only
+</button>
+
+<div id="error-message"></div>
+
+<script>
+  (function() {
+    var stripe = Stripe('pk_test_534hDEH0XBvwrXwmoOnTNPLb00AY49MXhP');
+
+    var checkoutButton = document.getElementById('checkout-button-plan_Fq4seFDoQuLzOB');
+    checkoutButton.addEventListener('click', function () {
+      // When the customer clicks on the button, redirect
+      // them to Checkout.
+      stripe.redirectToCheckout({
+        items: [{plan: 'plan_Fq4seFDoQuLzOB', quantity: 1}],
+        successUrl: 'https://68d14cdc.ngrok.io/success?session_id={CHECKOUT_SESSION_ID}',
+        cancelUrl: 'https://68d14cdc.ngrok.io/cancel',
+        clientReferenceId: '123123123'
+      })
+          .then(function (result) {
+            if (result.error) {
+              // If `redirectToCheckout` fails due to a browser or network
+              // error, display the localized error message to your customer.
+              var displayError = document.getElementById('error-message');
+              displayError.textContent = result.error.message;
+            }
+          });
+    });
+  })();
+</script>
