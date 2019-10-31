@@ -8,7 +8,7 @@ const webhookSecret = 'whsec_vRCUHhQHR3aWVvQGyMARCm2WhTUy6qXi';
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  res.render('index', { title: 'stripe test', key: STRIPE_PUBLIC_KEY, plan: PLANS.Pro });
+  res.render('index', { title: 'stripe test', key: STRIPE_PUBLIC_KEY, plan: PLANS.Pro_Month });
 });
 
 router.get('/test', async (req, res) => {
@@ -32,11 +32,19 @@ router.get('/cancel', function(req, res) {
 });
 
 router.get('/checkout/pro', async (req, res) => {
+  const {period} = req.query;
+  debug("query param: " + period || "none");
+  
+  let plan = PLANS.Pro_Month;
+  if(period && period.toLowerCase() === "year"){
+    plan = PLANS.Pro_Year;
+  }
+
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
     subscription_data: {
       items: [{
-        plan: PLANS.Pro
+        plan: plan
       }],
       metadata: {
         subscriptionData: 'subscriptionData'

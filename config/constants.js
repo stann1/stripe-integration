@@ -8,6 +8,7 @@ module.exports = {
     STRIPE_SECRET_KEY: getSecretKey(),
     STRIPE_PUBLIC_KEY: "pk_test_OTiVCeCxAZjtkvoAG2kZ102S00hXMZ3ztu",
     PLANS: {
-        Pro: "plan_G51LZkrmacfT8p"
+        Pro_Month: "plan_G51LZkrmacfT8p",
+        Pro_Year: "plan_G5kyCpqeORB2Uh"
     }
 };

@@ -1,36 +1,43 @@
 <h1>{{title}}</h1>
 
 <button style="background-color:#6772E5;color:#FFF;padding:8px 12px;border:0;border-radius:4px;font-size:1em"
-    id="checkout-button-pro"
-    role="link">Checkout 300 pari with backend</button>
-
+    id="checkout-button-pro-month"
+    role="link">Holler Pro(monthly) with backend</button>
+<button style="background-color:rgb(76, 84, 172);color:#FFF;padding:8px 12px;border:0;border-radius:4px;font-size:1em"
+    id="checkout-button-pro-year"
+    role="link">Holler Pro(yearly) with backend</button>
 <script>
   (function () {
     var stripeKey = "{{key}}";
     var stripe = Stripe(stripeKey);
 
-    const checkoutButton = document.getElementById('checkout-button-pro');
-    checkoutButton.addEventListener('click', () => {
-      fetch('/checkout/pro')
-          .then(response=>response.json())
-          .then(session => {
-        console.log(session);
-        stripe.redirectToCheckout({
-          sessionId: session.id
-        }).then((result) => {
-          console.log(result);
-        });
-      });
-    });
+    const handler = (period) => {
+      return fetch(`/checkout/pro?period=${period}`)
+        .then(response => response.json())
+        .then(session => {
+          console.log(session);
+          stripe.redirectToCheckout({
+            sessionId: session.id
+          }).then((result) => {
+            console.log(result);
+          });
+        })
+        .catch(console.error);
+    }
+
+    const checkoutButtonMonthly = document.getElementById('checkout-button-pro-month');
+    checkoutButtonMonthly.addEventListener('click', () => handler("month"));
+    const checkoutButtonYearly = document.getElementById('checkout-button-pro-year');
+    checkoutButtonYearly.addEventListener('click', () => handler("year"));
   })();
 </script>
 
 <button
-    style="background-color:#6772E5;color:#FFF;padding:8px 12px;border:0;border-radius:4px;font-size:1em"
-    id="checkout-button-plan_Fq4seFDoQuLzOB"
+    style="background-color:rgb(218, 215, 80);color:#FFF;padding:8px 12px;border:0;border-radius:4px;font-size:1em"
+    id="checkout-button-client"
     role="link"
 >
-  Checkout 300 pari client only
+  Checkout Holler Pro client only
 </button>
 <button
     style="background-color:rgb(94, 207, 94);color:#FFF;padding:8px 12px;border:0;border-radius:4px;font-size:1em"
@@ -55,7 +62,7 @@
           .then(session => {console.log(session);})
     })    
 
-    var checkoutButton = document.getElementById('checkout-button-plan_Fq4seFDoQuLzOB');
+    var checkoutButton = document.getElementById('checkout-button-client');
     checkoutButton.addEventListener('click', function () {
       // When the customer clicks on the button, redirect
       // them to Checkout.
