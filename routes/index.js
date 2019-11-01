@@ -1,14 +1,14 @@
 var express = require('express');
 var router = express.Router();
 var debug = require('debug')('app:indexroute');
-const {STRIPE_SECRET_KEY, STRIPE_PUBLIC_KEY, PLANS} = require('../config/constants');
+var debugWebHook = require('debug')('app:webhook');
+const {STRIPE_SECRET_KEY, STRIPE_PUBLIC_KEY, PLANS, STRIPE_WEBHOOK_KEY, PUBLIC_URL} = require('../config/constants');
 const stripe = require('stripe')(STRIPE_SECRET_KEY);
 const bodyParser = require('body-parser');
-const webhookSecret = 'whsec_vRCUHhQHR3aWVvQGyMARCm2WhTUy6qXi';
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  res.render('index', { title: 'stripe test', key: STRIPE_PUBLIC_KEY, plan: PLANS.Pro_Month });
+  res.render('index', { title: 'stripe test', key: STRIPE_PUBLIC_KEY, plan: PLANS.Pro_Month, redirectTo: PUBLIC_URL });
 });
 
 router.get('/test', async (req, res) => {
@@ -24,7 +24,8 @@ router.get('/test', async (req, res) => {
 })
 
 router.get('/success', function(req, res) {
-  res.render('success');
+  const {session_id} = req.query;
+  res.render('success', {session: session_id});
 });
 
 router.get('/cancel', function(req, res) {
@@ -51,8 +52,8 @@ router.get('/checkout/pro', async (req, res) => {
       }
     },
     client_reference_id: 1111,
-    success_url: 'https://68d14cdc.ngrok.io/success',
-    cancel_url: 'https://68d14cdc.ngrok.io/cancel',
+    success_url: `${PUBLIC_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${PUBLIC_URL}/cancel`,
   });
   return res.json(session);
 });
@@ -61,12 +62,20 @@ router.post('/webhook', bodyParser.raw({type: 'application/json'}), (req, res) =
     const sig = req.headers['stripe-signature'];
     let event;
     try {
-      event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+      event = stripe.webhooks.constructEvent(req.body, sig, STRIPE_WEBHOOK_KEY);
+      debugWebHook(event.type)
     } catch (err) {
+      debugWebHook(err);
       return res.status(400).send(`Webhook Error: ${err.message}`);
     }
     
-    debug(event);
+    // Handle the checkout.session.completed event
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object;
+
+      // Fulfill the purchase...
+      debugWebHook(session);
+    }
     
     // Return a response to acknowledge receipt of the event
     res.json({received: true});

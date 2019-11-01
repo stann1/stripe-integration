@@ -88,4 +88,4 @@ typings/
 .dynamodb/
 
 # api keys
-secret.key
+*secret.key
