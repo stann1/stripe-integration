@@ -7,7 +7,7 @@ const stripe = require('stripe')(STRIPE_SECRET_KEY);
 const bodyParser = require('body-parser');
 
 /* GET home page. */
-router.get('/', function(req, res) {
+router.get(['/','/index'], function(req, res) {
   res.render('index', { title: 'stripe test', key: STRIPE_PUBLIC_KEY, plan: PLANS.Pro_Month, redirectTo: PUBLIC_URL });
 });
 
