@@ -1,0 +1,17 @@
+<div>
+    <h2>All customers</h2>
+    {{#if message}}
+    <div class="alert alert-success" role="alert">
+        {{message}}
+    </div>
+    {{/if}}
+    <div>
+        <ul id="subs_list" class="list-group">
+            {{#each customers}}
+            <li class="list-group-item">
+                <pre>{{this}}</pre>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+</div>
