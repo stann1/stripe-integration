@@ -6,10 +6,16 @@
     </div>
     {{/if}}
     <div>
-        <ul id="subs_list" class="list-group">
+        <a class="btn btn-primary" href="/users/all">Load customers</a>
+        <ul id="cust_list" class="list-group">
             {{#each customers}}
             <li class="list-group-item">
-                <pre>{{this}}</pre>
+                <label>Customer:</label>&nbsp;<span>{{this.id}}</span>&nbsp;<span>{{this.email}}</span>
+                <a class="btn btn-warning" href="/users/{{this.id}}/cancel">Cancel all subscriptions</a>
+                {{#each this.subscriptions}}
+                    <a class="btn btn-info" href="/users/cancelsubscription/{{this}}">Cancel {{this}}</a>
+                {{/each}}
+                <pre>{{this.data}}</pre>
             </li>
             {{/each}}
         </ul>
