@@ -10,14 +10,25 @@
         <ul id="cust_list" class="list-group">
             {{#each customers}}
             <li class="list-group-item">
-                <label>Customer:</label>&nbsp;<span>{{this.id}}</span>&nbsp;<span>{{this.email}}</span>
-                <a class="btn btn-warning" href="/users/{{this.id}}/cancel">Cancel all subscriptions</a>
-                {{#each this.subscriptions}}
-                    <a class="btn btn-info" href="/users/cancelsubscription/{{this}}">Cancel {{this}}</a>
-                {{/each}}
-                <pre id="code-{{this.id}}">{{this.data}}</pre>
+                <p>
+                    <label>Customer:</label>&nbsp;<span>{{this.id}}</span>&nbsp;<span class="font-weight-bold">{{this.email}}</span>
+                    {{#each this.subscriptions}}
+                        <a class="btn btn-warning" href="/users/removesubscription/{{this}}">Cancel {{this}}</a>
+                        <a class="btn btn-info" href="/users/cancelsubscription/{{this}}">Cancel recurring {{this}}</a>
+                    {{/each}}
+                    <a href="/users/{{this.id}}/invoices">Show invoices</a>
+                </p>
+                <p><pre id="code-{{this.id}}">{{this.data}}</pre></p>
                 <button class="btn btn-default" id="btn-hide-data" onclick="hideData('code-{{this.id}}')">Show/Hide data</button>
             </li>
+            {{/each}}
+        </ul>
+        <ul id="invoice_list" class="list-group">
+            {{#each invoices}}
+                <li class="list-group-item">
+                    <a class="btn btn-success" href="{{this.url}}" target="_blank">Download</a>
+                     <p><pre>{{this.data}}</pre></p>
+                </li>
             {{/each}}
         </ul>
     </div>

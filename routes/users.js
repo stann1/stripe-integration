@@ -35,18 +35,46 @@ router.get('/all', async (req, res, next) => {
   }  
 });
 
-router.get('/:id/cancel', async (req,res) => {
-  debug("Cancelling subscription for user: " + req.params.id);
-  res.render('users', {message: "All Subscriptions cancelled for customer " + req.params.id});
+router.get('/:id/invoices', async (req,res) => {
+  debug("Fetching invoices for user: " + req.params.id);
+
+  const result = await stripe.invoices.list({
+    customer: req.params.id
+  });
+
+  const invoices = result.data ? result.data.map(inv => {
+    return {
+      url: inv.invoice_pdf,
+      data: JSON.stringify(inv)
+    }
+  }) : []
+
+  res.render('users', {invoices});
 })
 
-router.get('/cancelsubscription/:subid', async (req,res,next) => {
+// cancels immediately
+router.get('/removesubscription/:subid', async (req,res,next) => {
   const subId = req.params.subid;
   debug("Cancelling subscription: " + subId);
   try {
     const result = await stripe.subscriptions.del(subId);
     debug(result)
-    res.render('users', {message: `Subscription ${subId} cancelled`});
+    res.json({message: `Subscription ${subId} cancelled`});
+  } catch (error) {
+    return next(error);
+  }
+})
+
+// cancels at period end
+router.get('/cancelsubscription/:subid', async (req,res,next) => {
+  const subId = req.params.subid;
+  debug("Cancelling subscription at next period: " + subId);
+  try {
+    const result = await stripe.subscriptions.update(subId, {
+      cancel_at_period_end: true
+    });
+    debug(result)
+    res.render('users', {message: `Subscription ${subId} will be cancelled at the end of the period`});
   } catch (error) {
     return next(error);
   }

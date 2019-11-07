@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 
 /* GET home page. */
 router.get(['/','/index'], function(req, res) {
-  res.render('index', { title: 'stripe test', key: STRIPE_PUBLIC_KEY, plan: PLANS.Pro_Month, redirectTo: PUBLIC_URL });
+  res.render('index', { title: 'Stripe test', key: STRIPE_PUBLIC_KEY, plan: PLANS.Pro_Month, redirectTo: PUBLIC_URL });
 });
 
 router.get('/test', async (req, res) => {

@@ -1,5 +1,7 @@
 <h1>{{title}}</h1>
-
+<div id="msg-box" class="alert" role="alert">
+    {{message}}
+</div>
 <button class="btn btn-primary"
     id="checkout-button-pro-month"
     role="link">Plan Pro(monthly) with backend</button>
@@ -59,7 +61,18 @@
     testButton.addEventListener('click', function () {
       fetch('/test')
           .then(response=>response.json())
-          .then(session => {console.log(session);})
+          .then(session => {
+            console.log(session);
+            var msgBox = document.getElementById('msg-box');
+            msgBox.setAttribute("class", "alert alert-success")
+            msgBox.innerHTML = "Success";
+          })
+          .catch(error => {
+            console.log(error);
+            var msgBox = document.getElementById('msg-box');
+            msgBox.setAttribute("class", "alert alert-danger")
+            msgBox.innerHTML = "Error";
+          })
     })    
 
     var checkoutButton = document.getElementById('checkout-button-client');
