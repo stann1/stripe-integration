@@ -15,7 +15,7 @@ module.exports = {
     STRIPE_SECRET_KEY: getSecretKey("stripe"),
     STRIPE_WEBHOOK_KEY: getSecretKey("stripe-webhook"),
     STRIPE_PUBLIC_KEY: "pk_test_OTiVCeCxAZjtkvoAG2kZ102S00hXMZ3ztu",
-    PUBLIC_URL: process.env.NGROK || DEFAULT_PUBLIC_URL,
+    PUBLIC_URL: process.env.URL || DEFAULT_PUBLIC_URL,
     PLANS: {
         Pro_Month: "plan_G51LZkrmacfT8p",
         Pro_Year: "plan_G5kyCpqeORB2Uh"

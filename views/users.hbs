@@ -15,9 +15,20 @@
                 {{#each this.subscriptions}}
                     <a class="btn btn-info" href="/users/cancelsubscription/{{this}}">Cancel {{this}}</a>
                 {{/each}}
-                <pre>{{this.data}}</pre>
+                <pre id="code-{{this.id}}">{{this.data}}</pre>
+                <button class="btn btn-default" id="btn-hide-data" onclick="hideData('code-{{this.id}}')">Show/Hide data</button>
             </li>
             {{/each}}
         </ul>
     </div>
 </div>
+<script>
+    function hideData(codeId){
+        var element = document.getElementById(codeId);
+        if (element.style.display === "none") {
+            element.style.display = "block";
+        } else {
+            element.style.display = "none";
+        }
+    }
+</script>

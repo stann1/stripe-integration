@@ -88,5 +88,5 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
-  debug(`Public URL: ${process.env.NGROK || DEFAULT_PUBLIC_URL}`);
+  debug(`Public URL: ${process.env.URL || DEFAULT_PUBLIC_URL}`);
 }

@@ -5,7 +5,7 @@ const stripe = require('stripe')(STRIPE_SECRET_KEY);
 var debug = require('debug')('app:usersroute');
 
 /* GET users listing. */
-router.get('/', async (req, res, next) => {
+router.get('/', async (req, res) => {
   res.render('users', {customers: []});
 });
 
@@ -35,7 +35,7 @@ router.get('/all', async (req, res, next) => {
   }  
 });
 
-router.get('/:id/cancel', async (req,res,next) => {
+router.get('/:id/cancel', async (req,res) => {
   debug("Cancelling subscription for user: " + req.params.id);
   res.render('users', {message: "All Subscriptions cancelled for customer " + req.params.id});
 })
