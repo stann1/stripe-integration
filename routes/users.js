@@ -3,6 +3,7 @@ var router = express.Router();
 const {STRIPE_SECRET_KEY} = require('../config/constants');
 const stripe = require('stripe')(STRIPE_SECRET_KEY);
 var debug = require('debug')('app:usersroute');
+var prettyHtml = require('json-pretty-html').default;
 
 /* GET users listing. */
 router.get('/', async (req, res) => {
@@ -25,7 +26,7 @@ router.get('/all', async (req, res, next) => {
         if (cus.subscriptions && cus.subscriptions.data) {
           subscriptions = cus.subscriptions.data.map(sub => sub.id);
         }
-        return {id: cus.id, email: cus.email, subscriptions, data: JSON.stringify(cus)}
+        return {id: cus.id, email: cus.email, subscriptions, data: prettyHtml(cus)}
       });
     }
   
@@ -45,7 +46,7 @@ router.get('/:id/invoices', async (req,res) => {
   const invoices = result.data ? result.data.map(inv => {
     return {
       url: inv.invoice_pdf,
-      data: JSON.stringify(inv)
+      data: prettyHtml(inv)
     }
   }) : []
 
