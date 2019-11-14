@@ -33,7 +33,7 @@ router.get('/cancel', function(req, res) {
 });
 
 router.get('/checkout/pro', async (req, res) => {
-  const {period} = req.query;
+  const {period, custmail, custId} = req.query;
   debug("query param: " + period || "none");
   
   let plan = PLANS.Pro_Month;
@@ -41,7 +41,7 @@ router.get('/checkout/pro', async (req, res) => {
     plan = PLANS.Pro_Year;
   }
 
-  const session = await stripe.checkout.sessions.create({
+  const stripeSession = {
     payment_method_types: ['card'],
     subscription_data: {
       items: [{
@@ -54,7 +54,17 @@ router.get('/checkout/pro', async (req, res) => {
     client_reference_id: 1111,
     success_url: `${PUBLIC_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${PUBLIC_URL}/cancel`,
-  });
+  };
+
+  if(!custId){
+    debug("Creating session for new customer: " + custmail);
+    stripeSession.customer_email = custmail;
+  } else{
+    debug("Creating session for existing customer: " + custId);
+    stripeSession.customer = custId;
+  }
+
+  const session = await stripe.checkout.sessions.create(stripeSession);
   return res.json(session);
 });
 
