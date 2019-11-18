@@ -4,7 +4,6 @@ var debug = require('debug')('app:indexroute');
 var debugWebHook = require('debug')('app:webhook');
 const {STRIPE_SECRET_KEY, STRIPE_PUBLIC_KEY, PLANS, STRIPE_WEBHOOK_KEY, PUBLIC_URL} = require('../config/constants');
 const stripe = require('stripe')(STRIPE_SECRET_KEY);
-const bodyParser = require('body-parser');
 
 /* GET home page. */
 router.get(['/','/index'], function(req, res) {
@@ -68,7 +67,7 @@ router.get('/checkout/pro', async (req, res) => {
   return res.json(session);
 });
 
-router.post('/webhook', bodyParser.raw({type: 'application/json'}), (req, res) => {
+router.post('/webhook', (req, res) => {
     const sig = req.headers['stripe-signature'];
     debug("Webhook origin: ", req.headers['referer'] || req.headers['origin']);
     debug("Webhook remote addr: ", req.socket.remoteAddress);
@@ -93,5 +92,7 @@ router.post('/webhook', bodyParser.raw({type: 'application/json'}), (req, res) =
     res.json({received: true});
   }
 );
+
+
 
 module.exports = router;
