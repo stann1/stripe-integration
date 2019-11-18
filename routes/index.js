@@ -70,6 +70,8 @@ router.get('/checkout/pro', async (req, res) => {
 
 router.post('/webhook', bodyParser.raw({type: 'application/json'}), (req, res) => {
     const sig = req.headers['stripe-signature'];
+    debug("Webhook origin: ", req.headers['referer'] || req.headers['origin']);
+    debug("Webhook remote addr: ", req.socket.remoteAddress);
     let event;
     try {
       event = stripe.webhooks.constructEvent(req.body, sig, STRIPE_WEBHOOK_KEY);
