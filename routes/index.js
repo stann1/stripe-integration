@@ -67,7 +67,7 @@ router.get('/checkout/pro', async (req, res) => {
   return res.json(session);
 });
 
-router.post('/webhook', (req, res) => {
+router.post('/api/webhooks/stripe', (req, res) => {
     const sig = req.headers['stripe-signature'];
     debug("Webhook origin: ", req.headers['referer'] || req.headers['origin']);
     debug("Webhook remote addr: ", req.socket.remoteAddress);
